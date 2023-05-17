@@ -1,0 +1,46 @@
+{
+  "name": "infojobs-api-library",
+  "version": "1.0.0",
+  "description": "InfoJobs API Client Library for Node.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.1.7",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.8",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest --config jestconfig.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint src --ext .ts --fix",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [
+    "infojobs",
+    "api",
+    "infojobs apis",
+    "client",
+    "client library"
+  ],
+  "repository": "roberthgnz/infojobs-api-library.git",
+  "author": "Roberth González <@roberthgnz>",
+  "license": "MIT",
+  "dependencies": {
+    "infojobs-auth-library": "^1.0.0"
+  }
+}
