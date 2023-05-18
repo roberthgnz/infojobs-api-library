@@ -1,7 +1,29 @@
 import type { APICredentials } from '../../api';
 
-import { API_URL } from '../../contstants';
-import { toBase64 } from '../../utils';
+import { API_URL } from '../../shared/contstants';
+import { toBase64 } from '../../shared/utils';
+
+type DetailType = 'education' | 'experience' | 'futurejob' | 'personaldata' | 'skill';
+
+interface Education {
+  // Education interface properties
+}
+
+interface Experience {
+  // Experience interface properties
+}
+
+interface FutureJob {
+  // FutureJob interface properties
+}
+
+interface PersonalData {
+  // PersonalData interface properties
+}
+
+interface Skill {
+  // Skill interface properties
+}
 
 /**
  * For an authenticated candidate, it provides visualization and edition of CV data: candidate's experience, qualifications, skills and personal details. Candidates may have up to 5 different CVs.
@@ -185,15 +207,13 @@ export const curriculum = (credentials: APICredentials) => {
     details: new Proxy(
       {},
       {
-        get: <T extends string>(_, detail: T): T extends string ? any : unknown => {
+        get: (_, detail: DetailType) => {
           if (!['education', 'experience', 'futurejob', 'personaldata', 'skill'].includes(detail)) {
             throw new Error('Invalid detail type');
           }
 
           return async ({ token, curriculumId }: { token: string; curriculumId: string }) => {
-            const ENDPOINT_API_VERSION: {
-              [key: string]: number;
-            } = {
+            const ENDPOINT_API_VERSION: Record<DetailType, number> = {
               education: 1,
               experience: 1,
               futurejob: 4,
@@ -211,7 +231,19 @@ export const curriculum = (credentials: APICredentials) => {
               },
             });
 
-            return response.json();
+            return response.json() as Promise<
+              DetailType extends 'education'
+                ? Education
+                : DetailType extends 'experience'
+                ? Experience
+                : DetailType extends 'futurejob'
+                ? FutureJob
+                : DetailType extends 'personaldata'
+                ? PersonalData
+                : DetailType extends 'skill'
+                ? Skill
+                : never
+            >;
           };
         },
       },

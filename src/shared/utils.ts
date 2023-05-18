@@ -1,4 +1,4 @@
-import type { OperationPath } from './types';
+import type { OperationPath } from '../types';
 
 import { API_URL } from './contstants';
 

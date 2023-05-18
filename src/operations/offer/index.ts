@@ -1,8 +1,8 @@
 import type { APICredentials } from '../../api';
 import type { OfferDetailParameters, OfferDetailResponse, OfferListParameters, OfferListResponse } from './types';
 
-import { API_URL } from '../../contstants';
-import { toBase64 } from '../../utils';
+import { API_URL } from '../../shared/contstants';
+import { toBase64 } from '../../shared/utils';
 
 type Parameters = {
   [key: string]: string;
