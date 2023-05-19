@@ -1,21 +1,21 @@
 export type DetailType = 'education' | 'experience' | 'futurejob' | 'personaldata' | 'skill';
 
 export interface Education {
-  // Education interface properties
+  id: string;
 }
 
 export interface Experience {
-  // Experience interface properties
+  id: string;
 }
 
 export interface FutureJob {
-  // FutureJob interface properties
+  id: string;
 }
 
 export interface PersonalData {
-  // PersonalData interface properties
+  id: string;
 }
 
 export interface Skill {
-  // Skill interface properties
+  id: string;
 }
