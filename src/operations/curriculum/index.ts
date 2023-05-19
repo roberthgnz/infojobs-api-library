@@ -1,29 +1,8 @@
 import type { APICredentials } from '../../api';
+import type { DetailType, Education, Experience, FutureJob, PersonalData, Skill } from './types';
 
 import { API_URL } from '../../shared/contstants';
 import { toBase64 } from '../../shared/utils';
-
-type DetailType = 'education' | 'experience' | 'futurejob' | 'personaldata' | 'skill';
-
-interface Education {
-  // Education interface properties
-}
-
-interface Experience {
-  // Experience interface properties
-}
-
-interface FutureJob {
-  // FutureJob interface properties
-}
-
-interface PersonalData {
-  // PersonalData interface properties
-}
-
-interface Skill {
-  // Skill interface properties
-}
 
 /**
  * For an authenticated candidate, it provides visualization and edition of CV data: candidate's experience, qualifications, skills and personal details. Candidates may have up to 5 different CVs.
@@ -84,169 +63,41 @@ export const curriculum = (credentials: APICredentials) => {
 
       return response.json();
     },
-    /**
-     * Allows to read the education of a CV that belongs to the authenticated user. Only non null fields will not be displayed in the response.
-     */
+    details: ['education', 'experience', 'futurejob', 'personaldata', 'skill'].reduce((acc, detail) => {
+      acc[detail as DetailType] = async ({ token, curriculumId }: { token: string; curriculumId: string }) => {
+        const ENDPOINT_API_VERSION: Record<DetailType, number> = {
+          education: 1,
+          experience: 1,
+          futurejob: 4,
+          personaldata: 2,
+          skill: 2,
+        };
 
-    // TODO: Hacerlo con Proxye
-    // details.education
-    // details.experience
-    // details.futurejob
-    // details.personaldata
-    // details.skill
-    async getEducation({
-      token,
-      curriculumId,
-      details,
-      educationId,
-    }: {
-      token: string;
-      curriculumId: string;
-      details?: boolean;
-      educationId?: string;
-    }) {
-      const ENDPOINT_API_VERSION = '1';
+        const url = `${API_URL}/${ENDPOINT_API_VERSION[detail as DetailType]}/curriculum/${curriculumId}/${detail}`;
 
-      let url = `${API_URL}/${ENDPOINT_API_VERSION}/curriculum/${curriculumId}/education`;
+        const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
 
-      if (details) {
-        if (!educationId) {
-          throw new Error('educationId is required when details is set to true');
-        }
-        url += `/${educationId}`;
-      }
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Basic ${basic}, Bearer ${token}`,
+          },
+        });
 
-      const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Basic ${basic}, Bearer ${token}`,
-        },
-      });
-
-      return response.json();
-    },
-    async getExperience({
-      token,
-      curriculumId,
-      details,
-      experienceId,
-    }: {
-      token: string;
-      curriculumId: string;
-      details?: boolean;
-      experienceId?: string;
-    }) {
-      const ENDPOINT_API_VERSION = '1';
-
-      let url = `${API_URL}/${ENDPOINT_API_VERSION}/curriculum/${curriculumId}/experience`;
-
-      if (details) {
-        if (!experienceId) {
-          throw new Error('experienceId is required when details is set to true');
-        }
-        url += `/${experienceId}`;
-      }
-
-      const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Basic ${basic}, Bearer ${token}`,
-        },
-      });
-
-      return response.json();
-    },
-    async getFutureJob({ token, curriculumId }: { token: string; curriculumId: string }) {
-      const ENDPOINT_API_VERSION = '1';
-
-      const url = `${API_URL}/${ENDPOINT_API_VERSION}/curriculum/${curriculumId}/futurejob`;
-
-      const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Basic ${basic}, Bearer ${token}`,
-        },
-      });
-
-      return response.json();
-    },
-    async getPersonalData({ token, curriculumId }: { token: string; curriculumId: string }) {
-      const ENDPOINT_API_VERSION = '1';
-
-      const url = `${API_URL}/${ENDPOINT_API_VERSION}/curriculum/${curriculumId}/personaldata`;
-
-      const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Basic ${basic}, Bearer ${token}`,
-        },
-      });
-
-      return response.json();
-    },
-    async getSkill({ token, curriculumId }: { token: string; curriculumId: string }) {
-      const ENDPOINT_API_VERSION = '1';
-
-      const url = `${API_URL}/${ENDPOINT_API_VERSION}/curriculum/${curriculumId}/skill`;
-
-      const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Basic ${basic}, Bearer ${token}`,
-        },
-      });
-
-      return response.json();
-    },
-
-    details: new Proxy(
-      {},
-      {
-        get: (_, detail: DetailType) => {
-          if (!['education', 'experience', 'futurejob', 'personaldata', 'skill'].includes(detail)) {
-            throw new Error('Invalid detail type');
-          }
-
-          return async ({ token, curriculumId }: { token: string; curriculumId: string }) => {
-            const ENDPOINT_API_VERSION: Record<DetailType, number> = {
-              education: 1,
-              experience: 1,
-              futurejob: 4,
-              personaldata: 2,
-              skill: 2,
-            };
-
-            const url = `${API_URL}/${ENDPOINT_API_VERSION[detail]}/curriculum/${curriculumId}/${detail}`;
-
-            const basic = toBase64(`${credentials.clientId}:${credentials.clientSecret}`);
-
-            const response = await fetch(url, {
-              headers: {
-                Authorization: `Basic ${basic}, Bearer ${token}`,
-              },
-            });
-
-            return response.json() as Promise<
-              DetailType extends 'education'
-                ? Education
-                : DetailType extends 'experience'
-                ? Experience
-                : DetailType extends 'futurejob'
-                ? FutureJob
-                : DetailType extends 'personaldata'
-                ? PersonalData
-                : DetailType extends 'skill'
-                ? Skill
-                : never
-            >;
-          };
-        },
-      },
-    ),
+        return response.json() as Promise<
+          DetailType extends 'education'
+            ? Education
+            : DetailType extends 'experience'
+            ? Experience
+            : DetailType extends 'futurejob'
+            ? FutureJob
+            : DetailType extends 'personaldata'
+            ? PersonalData
+            : DetailType extends 'skill'
+            ? Skill
+            : any
+        >;
+      };
+      return acc;
+    }, {} as Record<DetailType, ({ token, curriculumId }: { token: string; curriculumId: string }) => Promise<DetailType extends 'education' ? Education : DetailType extends 'experience' ? Experience : DetailType extends 'futurejob' ? FutureJob : DetailType extends 'personaldata' ? PersonalData : DetailType extends 'skill' ? Skill : any>>),
   };
 };
