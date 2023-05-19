@@ -1,10 +1,31 @@
 # InfoJobs API Library: Node.js Client
 
+[![Issues](https://img.shields.io/github/issues/roberthgnz/infojobs-api-library)](https://github.com/roberthgnz/infojobs-api-library/issues)
+[![Forks](https://img.shields.io/github/forks/roberthgnz/infojobs-api-library)](https://github.com/roberthgnz/infojobs-api-library)
+[![Stars](https://img.shields.io/github/stars/roberthgnz/infojobs-api-library)](https://github.com/roberthgnz/infojobs-api-library)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors-)
+
 This is InfoJobs's unofficially supported [node.js](http://nodejs.org/) client API library.
+
+## Features
+
+- 📦 Tree-shakeable
+- ⚡ Fast
+- ✨ Lightweight
+- ❤️ Strongly typed
+
+## Installation
+
+```bash
+npm install infojobs-api-library
+```
 
 ## How to use
 
 ```js
+// ES6 imports supported
+// import infojobs from 'infojobs-api-library';
+
 const infojobs = require('infojobs-api-library');
 
 const apiClient = infojobs.api({
@@ -59,3 +80,32 @@ const education = await apiClient.curriculum.details.education({
 
 console.log(education);
 ```
+
+## Supported API methods:
+
+### Job Search
+
+| Name | Type             | Description                                                        |
+| ---- | ---------------- | ------------------------------------------------------------------ |
+| GET  | /offer           | Returns a list of Job Offers that comply with the search criteria. |
+| GET  | /offer/{offerId} | Returns the detail of the offer with the given id.                 |
+
+### CV Visualization and Edition
+
+| Name | Type                                                 | Description                                                            |
+| ---- | ---------------------------------------------------- | ---------------------------------------------------------------------- |
+| GET  | /curriculum                                          | Returns list of CVs of the authenticated user.                         |
+| GET  | /curriculum/{curriculumId}/cvtext                    | Gets the curriculum in text format                                     |
+| GET  | /curriculum/{curriculumId}/education                 | Gets the education details of the curriculum                           |
+| GET  | /curriculum/{curriculumId}/education/{educationId}   | Retrieves education details for a given CV for the authenticated user. |
+| GET  | /curriculum/{curriculumId}/experience/{experienceId} | Retrieves the experience requested.                                    |
+| GET  | /curriculum/{curriculumId}/experience                | Retrieve the experiences from the given curriculum Id.                 |
+| GET  | /curriculum/{curriculumId}/futurejob                 | Gets the future job fields of the curriculum                           |
+| GET  | /curriculum/{curriculumId}/personaldata              | Gets the personal data of the curriculum's owner                       |
+| GET  | /curriculum/{curriculumId}/skill                     | Gets the curriculum skills                                             |
+
+Feel free to collaborate.
+
+## Contributing
+
+Are you interested in contributing to the project? Thank you very much for your interest. We are always looking for improvements to the project and contributions from open source developers are greatly appreciated. If you have a contribution in mind, please see our [Contribution Guide](/CONTRIBUTING.md) for information on how to do so.
